@@ -1,24 +1,24 @@
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 class Product {
     private final String name;
     private final Set<Product> ingredients;
-    private Product parent;
+    private Product parent = null;
 
     public Product(String name) {
         this.name = name;
         this.ingredients = new HashSet<>();
-        this.parent = null;
     }
 
     public boolean addProduct(Product product) {
         if (ingredients.contains(product)) {
             return false;
         }
-        Set<Product> allIngredients = new HashSet<>();
-        product.collectAllIngredients(allIngredients);
+        Set<Product> allIngredients = product.collectAllIngredients();
         for (Product current = this; current != null; current = current.getParent()) {
             if (allIngredients.contains(current)) {
                 return false;
@@ -29,12 +29,16 @@ class Product {
         return true;
     }
 
-    private void collectAllIngredients(Set<Product> allIngredients) {
-        for (Product ingredient : ingredients) {
-            if (allIngredients.add(ingredient)) {
-                ingredient.collectAllIngredients(allIngredients);
+    private Set<Product> collectAllIngredients() {
+        Set<Product> allIngredients = new HashSet<>();
+        Deque<Product> deque = new ArrayDeque<>(ingredients);
+        while (!deque.isEmpty()) {
+            Product current = deque.poll();
+            if (allIngredients.add(current)) {
+                deque.addAll(current.ingredients);
             }
         }
+        return allIngredients;
     }
 
     private void setParent(Product parent) {
