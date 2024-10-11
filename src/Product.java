@@ -15,7 +15,7 @@ class Product {
     }
 
     public boolean addProduct(Product product) {
-        if (ingredients.contains(product)) {
+        if (product == null || ingredients.contains(product)) {
             return false;
         }
         Set<Product> allIngredients = product.collectAllIngredients();
