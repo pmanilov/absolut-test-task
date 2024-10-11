@@ -7,7 +7,7 @@ import java.util.Deque;
 class Product {
     private final String name;
     private final Set<Product> ingredients;
-    private Product parent = null;
+    private Product parent;
 
     public Product(String name) {
         this.name = name;
